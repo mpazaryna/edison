@@ -112,22 +112,22 @@ We recommend systematically testing local LLMs against the following variables:
 
 We propose the following development phases for building reliable applications with local LLMs:
 
-### Phase 1: Capability Boundary Mapping (2 weeks)
+### Phase 1: Capability Boundary Mapping
 - Develop systematic test suite for local LLM capabilities
 - Benchmark against cloud alternatives
 - Document specific thresholds where performance degrades
 
-### Phase 2: Component Development (4 weeks)
+### Phase 2: Component Development
 - Build reliable atomic operations libraries
 - Develop confidence scoring mechanisms
 - Create modular pipeline architecture
 
-### Phase 3: Application Prototypes (4 weeks)
+### Phase 3: Application Prototypes
 - Implement YouTube summarizer with task decomposition
 - Build demonstration hybrid architecture
 - Create human-in-the-loop interface prototype
 
-### Phase 4: Optimization and Documentation (2 weeks)
+### Phase 4: Optimization and Documentation
 - Performance optimization
 - Best practices documentation
 - Pattern library
@@ -158,4 +158,4 @@ Local LLMs represent a promising technology for building privacy-preserving, cos
 
 ## Command Line Usage
 
-deno run --allow-run --allow-read --allow-write --allow-net main.ts https://youtu.be/M0tq_xL04n0\?si\=w_A0eAHKdr90sBwN
+deno task start https://youtu.be/M0tq_xL04n0\?si\=w_A0eAHKdr90sBwN

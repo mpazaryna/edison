@@ -1,5 +1,5 @@
 // Import Ollama API settings from config
-import { baseUrl, modelName, config } from "./config.ts";
+import { baseUrl, config, modelName } from "./config.ts";
 export { baseUrl, modelName };
 
 // Check for required tools
@@ -7,15 +7,14 @@ export async function checkRequiredTools(): Promise<boolean> {
   let hasYtDlp = false;
 
   try {
-    const ytdlpProcess = Deno.run({
-      cmd: ["yt-dlp", "--version"],
+    const ytdlpProcess = new Deno.Command("yt-dlp", {
+      args: ["--version"],
       stdout: "piped",
-      stderr: "piped"
+      stderr: "piped",
     });
-    const ytdlpStatus = await ytdlpProcess.status();
-    ytdlpProcess.close();
-    hasYtDlp = ytdlpStatus.success;
-  } catch (e) {
+    const ytdlpOutput = await ytdlpProcess.output();
+    hasYtDlp = ytdlpOutput.code === 0;
+  } catch (_e) {
     // yt-dlp not found
   }
 
@@ -32,8 +31,8 @@ export async function checkRequiredTools(): Promise<boolean> {
 
 // Function to sanitize filenames
 export function sanitizeFilename(name: string): string {
-  let sanitized = name.replace(/\s+/g, '-');
-  sanitized = sanitized.replace(/[\/\\:*?"<>|]/g, '');
+  let sanitized = name.replace(/\s+/g, "-");
+  sanitized = sanitized.replace(/[\/\\:*?"<>|]/g, "");
   if (sanitized.length > config.maxFilenameLength) {
     sanitized = sanitized.substring(0, config.maxFilenameLength);
   }
@@ -42,26 +41,31 @@ export function sanitizeFilename(name: string): string {
 
 // Display a spinner animation during processing
 export function startSpinner(): number {
-  const spinners = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
+  const spinners = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
   let i = 0;
   return setInterval(() => {
-    Deno.stdout.writeSync(new TextEncoder().encode(`\r${spinners[i]} Processing...`));
+    Deno.stdout.writeSync(
+      new TextEncoder().encode(`\r${spinners[i]} Processing...`),
+    );
     i = (i + 1) % spinners.length;
   }, 100);
 }
 
 // Split transcript into chunks to avoid context length issues
-export function splitTranscript(transcript: string, maxChunkSize: number = config.maxChunkSize): string[] {
-  const words = transcript.split(' ');
+export function splitTranscript(
+  transcript: string,
+  maxChunkSize: number = config.maxChunkSize,
+): string[] {
+  const words = transcript.split(" ");
   const chunks: string[] = [];
-  let currentChunk = '';
+  let currentChunk = "";
 
   for (const word of words) {
-    if ((currentChunk + ' ' + word).length > maxChunkSize) {
+    if ((currentChunk + " " + word).length > maxChunkSize) {
       chunks.push(currentChunk);
       currentChunk = word;
     } else {
-      currentChunk = currentChunk ? currentChunk + ' ' + word : word;
+      currentChunk = currentChunk ? currentChunk + " " + word : word;
     }
   }
 
@@ -84,7 +88,8 @@ export async function loadPrompt(promptName: string): Promise<string> {
 
 // Extract video ID from YouTube URL
 export function extractVideoId(url: string): string {
-  const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i;
+  const regex =
+    /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i;
   const match = url.match(regex);
   return match ? match[1] : "";
 }
