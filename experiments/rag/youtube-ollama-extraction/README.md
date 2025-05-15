@@ -155,3 +155,7 @@ This assessment is specific to Llama3.2 via Ollama. Newer models may offer impro
 ## Conclusion
 
 Local LLMs represent a promising technology for building privacy-preserving, cost-effective applications. However, their current limitations require careful application design. By systematically mapping capabilities and implementing appropriate architecture patterns, developers can leverage local LLMs effectively while mitigating their limitations.
+
+## Command Line Usage
+
+deno run --allow-run --allow-read --allow-write --allow-net main.ts https://youtu.be/M0tq_xL04n0\?si\=w_A0eAHKdr90sBwN
