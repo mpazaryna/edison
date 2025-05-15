@@ -113,7 +113,13 @@ export async function extractQuotes(text: string): Promise<string[]> {
       // Find the JSON array in the response
       const jsonMatch = data.response.match(/\[[\s\S]*\]/);
       if (jsonMatch) {
-        return JSON.parse(jsonMatch[0]);
+        try {
+          return JSON.parse(jsonMatch[0]);
+        } catch (parseError) {
+          console.error("Error parsing JSON from quote extraction:", parseError);
+          // Return empty array instead of failing completely
+          return [];
+        }
       }
       return [];
     } catch (error) {

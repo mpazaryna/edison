@@ -64,15 +64,27 @@ async function main() {
   // Process all chunks for topics and quotes
   let allTopics: string[] = [];
   let allQuotes: string[] = [];
-  
-  for (const chunk of chunks) {
-    const chunkTopics = await extractTopics(chunk);
-    const chunkQuotes = await extractQuotes(chunk);
+
+  // Process chunks in sequence to avoid overwhelming the API
+  for (let i = 0; i < chunks.length; i++) {
+    const chunk = chunks[i];
+    console.log(`Processing chunk ${i+1}/${chunks.length}...`);
     
-    allTopics = [...allTopics, ...chunkTopics];
-    allQuotes = [...allQuotes, ...chunkQuotes];
+    try {
+      const chunkTopics = await extractTopics(chunk);
+      allTopics = [...allTopics, ...chunkTopics];
+    } catch (error) {
+      console.error(`Error extracting topics from chunk ${i+1}:`, error);
+    }
+    
+    try {
+      const chunkQuotes = await extractQuotes(chunk);
+      allQuotes = [...allQuotes, ...chunkQuotes];
+    } catch (error) {
+      console.error(`Error extracting quotes from chunk ${i+1}:`, error);
+    }
   }
-  
+
   // Remove duplicates
   allTopics = [...new Set(allTopics)];
   allQuotes = [...new Set(allQuotes)];
