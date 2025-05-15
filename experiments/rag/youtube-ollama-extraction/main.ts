@@ -1,6 +1,7 @@
 import {
   checkRequiredTools,
   extractVideoId,
+  parseCommandLineArgs,
   sanitizeFilename,
   startSpinner,
 } from "./utils.ts";
@@ -32,13 +33,9 @@ import {
 
 // Main function with streaming approach
 async function main() {
-  // Check for command line arguments
-  if (Deno.args.length < 1) {
-    console.error("Please provide a YouTube URL as an argument");
-    Deno.exit(1);
-  }
-
-  const youtubeUrl = Deno.args[0];
+  // Parse command line arguments
+  const args = parseCommandLineArgs(Deno.args);
+  const youtubeUrl = args.url;
   const videoId = extractVideoId(youtubeUrl);
 
   if (!videoId) {
@@ -109,18 +106,42 @@ async function main() {
   );
   console.log(`Merged into ${chunks.length} logical chunks for processing`);
 
+  // Apply chunk selection if parameters were provided
+  let selectedChunks = [...chunks];
+  const { startChunk, endChunk, specificChunks } = args;
+
+  if (specificChunks) {
+    // Select specific chunks by index
+    selectedChunks = specificChunks
+      .filter(index => index >= 0 && index < chunks.length)
+      .map(index => chunks[index]);
+    console.log(`Selected ${selectedChunks.length} specific chunks for processing: ${specificChunks.join(', ')}`);
+  } else if (startChunk !== undefined || endChunk !== undefined) {
+    // Select chunks by range
+    const start = startChunk !== undefined ? Math.max(0, startChunk) : 0;
+    const end = endChunk !== undefined ? Math.min(chunks.length - 1, endChunk) : chunks.length - 1;
+    
+    if (start <= end) {
+      selectedChunks = chunks.slice(start, end + 1);
+      console.log(`Selected chunks ${start} to ${end} for processing (${selectedChunks.length} chunks)`);
+    } else {
+      console.error(`Invalid chunk range: ${start} to ${end}`);
+      Deno.exit(1);
+    }
+  }
+
   // Start spinner for processing indication
   const spinner = startSpinner();
 
   // Process each chunk independently and generate summaries
   const segmentSummaries: SegmentSummary[] = [];
 
-  for (let i = 0; i < chunks.length; i++) {
-    const chunk = chunks[i];
+  for (let i = 0; i < selectedChunks.length; i++) {
+    const chunk = selectedChunks[i];
     console.log(
       `\nProcessing segment ${
         i + 1
-      }/${chunks.length} at timestamp ${chunk.timestamp}...`,
+      }/${selectedChunks.length} at timestamp ${chunk.timestamp}...`,
     );
 
     try {

@@ -29,6 +29,38 @@ export async function checkRequiredTools(): Promise<boolean> {
   return true;
 }
 
+// Parse command line arguments
+export function parseCommandLineArgs(args: string[]): {
+  url: string;
+  startChunk?: number;
+  endChunk?: number;
+  specificChunks?: number[];
+} {
+  if (args.length < 1) {
+    console.error("Please provide a YouTube URL as an argument");
+    Deno.exit(1);
+  }
+
+  const result: any = {
+    url: args[0]
+  };
+
+  // Process additional arguments
+  for (let i = 1; i < args.length; i++) {
+    const arg = args[i];
+    
+    if (arg === "--start-chunk" || arg === "-s") {
+      result.startChunk = parseInt(args[++i]);
+    } else if (arg === "--end-chunk" || arg === "-e") {
+      result.endChunk = parseInt(args[++i]);
+    } else if (arg === "--chunks" || arg === "-c") {
+      result.specificChunks = args[++i].split(',').map(Number);
+    }
+  }
+
+  return result;
+}
+
 // Function to sanitize filenames
 export function sanitizeFilename(name: string): string {
   let sanitized = name.replace(/\s+/g, "-");

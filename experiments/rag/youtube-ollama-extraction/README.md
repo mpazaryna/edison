@@ -158,4 +158,21 @@ Local LLMs represent a promising technology for building privacy-preserving, cos
 
 ## Command Line Usage
 
+Basic usage:
+```
 deno task start https://youtu.be/M0tq_xL04n0\?si\=w_A0eAHKdr90sBwN
+```
+
+With chunk selection options:
+```
+# Process only chunks 2 through 5
+deno task start https://youtu.be/VideoID --start-chunk 2 --end-chunk 5
+
+# Process only specific chunks (0, 3, and 6)
+deno task start https://youtu.be/VideoID --chunks 0,3,6
+```
+
+Available options:
+- `--start-chunk` or `-s`: Index of the first chunk to process (0-based)
+- `--end-chunk` or `-e`: Index of the last chunk to process (0-based)
+- `--chunks` or `-c`: Comma-separated list of specific chunk indices to process
