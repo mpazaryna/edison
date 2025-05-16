@@ -54,8 +54,6 @@ woodshed-06-ai-vol2/
 
 ### Recommended Approach
 
-For optimal experience with AI coding assistants (like Cursor or Windsurf):
-
 1. Clone the entire repository to maintain the full context
 2. Open **individual folders** in separate windows of your editor/AI tool when working on specific projects
 3. This provides focused context for AI tools while maintaining the benefits of the monorepo structure
@@ -70,12 +68,6 @@ When adding a new project:
    - Setup instructions
    - Usage examples
    - References to related projects within the monorepo
-
-### Dependencies
-
-- Use relative imports for internal dependencies when appropriate
-- For shared code used across multiple projects, consider moving it to the `libraries/` directory
-- Document external dependencies in each project's README.md
 
 ### Documentation
 
