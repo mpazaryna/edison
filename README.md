@@ -1,12 +1,6 @@
-# Edison
-
-## A Monorepo for Systematic LLM Experimentation and Development
-
-Named after Thomas Edison's approach to methodical experimentation and detailed record-keeping, this monorepo serves as a central repository for diverse LLM tasks, experiments, and applications across multiple programming languages and tools.
+# A Monorepo for Systematic LLM Experimentation and Development
 
 ## Philosophy
-
-Like Edison's notebooks that documented thousands of experiments and ideas, this repository aims to:
 
 - **Centralize knowledge** across different LLM domains and projects
 - **Enable cross-pollination** of ideas between seemingly unrelated experiments
@@ -18,7 +12,7 @@ Like Edison's notebooks that documented thousands of experiments and ideas, this
 The repository is organized into the following top-level directories:
 
 ```
-edison/
+woodshed-06-ai-vol2/
 ├── experiments/         # Systematic deep dives by concept
 │   ├── embeddings/      # Vector embedding experiments
 │   ├── rag/             # Retrieval augmented generation
@@ -87,20 +81,3 @@ When adding a new project:
 
 - Add detailed comments to experimental code
 - Keep a record of insights in Markdown files
-- Use the `notebooks/` directory for extended thoughts and explorations
-- Follow the "Edison notebook" philosophy by documenting both successes and failures
-
-## Contribution Guidelines
-
-1. Create focused, single-purpose commits
-2. Use descriptive branch names that indicate the category and purpose
-3. Reference related projects or experiments in commit messages when applicable
-4. Document any significant findings or patterns in the appropriate notebook directory
-
-## License
-
-[Specify your license information here]
-
----
-
-*"I have not failed. I've just found 10,000 ways that won't work." - Thomas Edison*
